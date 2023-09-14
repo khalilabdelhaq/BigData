@@ -1,15 +1,12 @@
 version: '3'
 
-
-x-default-opts: 
-  &default-opts
+x-default-opts: &default-opts
   image: hadoop-hbase-spark
   logging:
     options:
-      max-size: "1m" 
+      max-size: '1m'
   networks:
     - hadoopnet
-
 
 services:
   hadoop-master:
@@ -17,35 +14,41 @@ services:
     hostname: hadoop-master
     container_name: hadoop-master
     ports:
-      - "50070:50070"
-      - "8088:8088"
-      - "7077:7077"
-      - "16010:16010"
+      - '50070:50070'
+      - '8088:8088'
+      - '7077:7077'
+      - '16010:16010'
     deploy:
       replicas: 1
       placement:
         constraints: [node.role == manager]
+    environment:
+      - NODE_TYPE=m
 
   hadoop-slave1:
     <<: *default-opts
     hostname: hadoop-slave1
     container_name: hadoop-slave1
     ports:
-      - "8040:8042"
+      - '8040:8042'
     deploy:
       replicas: 1
       placement:
         constraints: [node.role == worker]
+    environment:
+      - NODE_TYPE=s
   hadoop-slave2:
     <<: *default-opts
     hostname: hadoop-slave2
     container_name: hadoop-slave2
     ports:
-      - "8041:8042"
+      - '8041:8042'
     deploy:
       replicas: 1
       placement:
         constraints: [node.role == worker]
+    environment:
+      - NODE_TYPE=s
 
 networks:
   hadoopnet:
